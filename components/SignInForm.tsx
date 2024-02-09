@@ -14,18 +14,45 @@ interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function SignInForm({ className, ...props }: AuthFormProps) {
    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-   async function onSubmit(event: React.SyntheticEvent) {
-      event.preventDefault();
+   const signin = async (data: any): Promise<void> => {
       setIsLoading(true);
 
-      setTimeout(() => {
+      const email = data.get("email");
+      const password = data.get("password");
+
+      if (!email || !password) {
+         throw new Error("Invalid form data");
+      }
+
+      try {
+         const response: Response = await fetch(
+            "https://devapi.omacart.com/login",
+            {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                  email,
+                  password,
+               }),
+            },
+         );
+         if (response.ok) {
+            setIsLoading(false);
+            const res = await response.json();
+            console.log(res);
+         }
+      } catch (error) {
+         console.error(error);
+      } finally {
          setIsLoading(false);
-      }, 3000);
-   }
+      }
+   };
 
    return (
       <div className={cn("grid gap-6", className)} {...props}>
-         <form onSubmit={onSubmit}>
+         <form action={signin}>
             <div className="grid gap-4">
                <div className="grid gap-1">
                   <Label htmlFor="email">Email</Label>
@@ -64,7 +91,7 @@ export function SignInForm({ className, ...props }: AuthFormProps) {
                      Forgot password?
                   </p>
                </div>
-               <Button disabled={isLoading}>
+               <Button type="submit" disabled={isLoading}>
                   {isLoading && (
                      <ImSpinner9 className="mr-2 h-3 w-3 animate-spin" />
                   )}
