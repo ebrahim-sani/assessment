@@ -23,7 +23,7 @@ export default function page() {
                   </div>
                   <SignInForm />
                   <p className="px-8 text-center text-sm text-muted-foreground">
-                     Don't have account?{" "}
+                     Don&apos;t have account?{" "}
                      <Link
                         href="/signup"
                         className="underline underline-offset-4 hover:text-primary"
