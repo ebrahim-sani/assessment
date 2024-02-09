@@ -8,11 +8,14 @@ import { Label } from "./ui/label";
 import { ImSpinner9 } from "react-icons/im";
 import { Input } from "./ui/input";
 import { Checkbox } from "./ui/checkbox";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SignInForm({ className, ...props }: AuthFormProps) {
    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+   const router = useRouter();
 
    const signin = async (data: any): Promise<void> => {
       setIsLoading(true);
@@ -21,7 +24,8 @@ export function SignInForm({ className, ...props }: AuthFormProps) {
       const password = data.get("password");
 
       if (!email || !password) {
-         throw new Error("Invalid form data");
+         // throw new Error("Invalid form data");
+         toast.error("Invalid form data!");
       }
 
       try {
@@ -40,8 +44,10 @@ export function SignInForm({ className, ...props }: AuthFormProps) {
          );
          if (response.ok) {
             setIsLoading(false);
+
             const res = await response.json();
             console.log(res);
+            router.push("/dashboard");
          }
       } catch (error) {
          console.error(error);

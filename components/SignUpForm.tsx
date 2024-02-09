@@ -23,7 +23,8 @@ export function SignUpForm({ className, ...props }: AuthFormProps) {
       const password = data.get("password");
 
       if (!firstname || !lastname || !email || !password) {
-         throw new Error("Invalid form data");
+         // throw new Error("Invalid form data");
+         toast.error("Invalid form data!");
       }
 
       try {
